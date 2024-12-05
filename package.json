@@ -1,6 +1,12 @@
 {
+  "name": "web-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js",  // Or the entry point of your app
+    "dev": "nodemon app.js"  // Optional: for development use with hot reloading
+  },
   "dependencies": {
-    "express": "^4.21.1",
-    "sqlite3": "^5.1.7"
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.2"
   }
 }
