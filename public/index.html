@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify Playlists</title>
+  <link rel="stylesheet" href="/public/style.css"> <!-- Link to the CSS file -->
+  <script>
+    async function fetchItems() {
+      const response = await fetch('/items');
+      const data = await response.json();
+      const itemsList = document.getElementById('items-list');
+      itemsList.innerHTML = ''; // Clear the list before populating it
+      data.items.forEach(item => {
+        const li = document.createElement('li');
+        li.innerText = `${item.name} - ${item.description}`;
+        itemsList.appendChild(li);
+      });
+    }
+
+    async function addItem() {
+      const name = document.getElementById('name').value;
+      const description = document.getElementById('description').value;
+
+      await fetch('/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, description }),
+      });
+
+      fetchItems(); // Reload items after adding a new one
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Spotify Playlists</h1>
+    <div class="form">
+      <input type="text" id="name" placeholder="Playlist name" class="input-field">
+      <input type="text" id="description" placeholder="Description" class="input-field">
+      <button onclick="addItem()" class="add-btn">Add Playlist</button>
+    </div>
+
+    <ul id="items-list" class="item-list"></ul>
+
+    <script>
+      fetchItems(); // Load items on page load
+    </script>
+  </div>
+</body>
+</html>
