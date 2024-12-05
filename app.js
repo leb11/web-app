@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path'); // Import path module
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
-// Middleware
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files
 
 // Database setup
 const db = new sqlite3.Database('./database.db', (err) => {
@@ -17,7 +18,12 @@ const db = new sqlite3.Database('./database.db', (err) => {
   }
 });
 
-// Routes
+// Root route (Accessed when you visit http://localhost:10000 or root URL)
+app.get('/', (req, res) => {
+  res.send('<h1>Welcome to Spotify Playlists</h1><p>Use the endpoint <code>/items</code> to interact with the app.</p>');
+});
+
+// GET all items
 app.get('/items', (req, res) => {
   db.all('SELECT * FROM items', [], (err, rows) => {
     if (err) {
@@ -28,6 +34,7 @@ app.get('/items', (req, res) => {
   });
 });
 
+// POST a new item
 app.post('/items', (req, res) => {
   const { name, description } = req.body;
   db.run(
